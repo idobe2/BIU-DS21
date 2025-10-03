@@ -1,0 +1,3 @@
+dataset,model,train_accuracy,train_precision,train_recall,train_f1,train_auc,test_accuracy,test_precision,test_recall,test_f1,test_auc
+Dataset A,LogReg (no regularization),0.718,0.713,0.74,0.726,0.781,0.722,0.718,0.743,0.73,0.771
+Dataset B,LogReg (no regularization),0.954,0.739,0.121,0.209,0.828,0.954,0.857,0.1,0.179,0.819

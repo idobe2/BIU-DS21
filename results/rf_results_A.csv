@@ -1,0 +1,6 @@
+dataset,model,max_depth,train_accuracy,train_precision,train_recall,train_f1,train_auc,test_accuracy,test_precision,test_recall,test_f1,test_auc
+Dataset A,RandomForest_depth=2,2,0.711,0.711,0.722,0.717,0.779,0.68,0.683,0.685,0.684,0.742
+Dataset A,RandomForest_depth=4,4,0.775,0.769,0.793,0.781,0.849,0.719,0.718,0.733,0.725,0.788
+Dataset A,RandomForest_depth=6,6,0.849,0.845,0.86,0.852,0.914,0.752,0.75,0.763,0.757,0.816
+Dataset A,RandomForest_depth=8,8,0.902,0.898,0.91,0.904,0.966,0.773,0.778,0.773,0.775,0.827
+Dataset A,RandomForest_depth=None,None,1.0,1.0,1.0,1.0,1.0,0.8,0.812,0.787,0.799,0.839
