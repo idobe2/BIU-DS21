@@ -1,9 +1,3 @@
-# -*- coding: utf-8 -*-
-# פתרון פרק הרצה – חלקים א–ב–ג – בדיוק לפי דרישות המטלה.
-# חלק א: יצירת סטים A ו-B.
-# חלק ב: LogisticRegression בלי רגולריזציה + חישוב Accuracy, Precision, Recall, F1, AUC ושרטוט ROC/PR.
-# חלק ג: LogisticRegression עם L2 (סריקת C לוגריתמית) + RandomForest עם שליטה ב-max_depth והשוואת train vs test.
-
 import os
 import numpy as np
 import pandas as pd
@@ -19,8 +13,6 @@ from sklearn.metrics import (
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 
-
-# ===== כלי עזר בסיסיים =====
 
 RESULTS_DIR = "results"
 RANDOM_STATE = 42
@@ -38,8 +30,8 @@ def to_df(X, y, prefix):
     df["target"] = y
     return df
 
+# Return all requested metrics: Accuracy, Precision, Recall, F1, ROC-AUC.
 def evaluate_all(y_true, y_pred, y_proba_pos):
-    """החזרת המדדים המבוקשים בלבד: Accuracy, Precision, Recall, F1, ROC-AUC."""
     acc  = accuracy_score(y_true, y_pred)
     prec = precision_score(y_true, y_pred, zero_division=0)
     rec  = recall_score(y_true, y_pred, zero_division=0)
@@ -72,18 +64,14 @@ def plot_pr(y_true, y_proba, title, path_png):
     plt.savefig(path_png, dpi=144)
     plt.close()
 
+# LogisticRegression with no regularization (penalty='none').
 def try_logreg_no_reg():
-    """
-    החזרת LogisticRegression ללא רגולריזציה.
-    אם penalty='none' לא נתמך בסביבת ההרצה, נשתמש ב-L2 עם C עצום כקירוב.
-    """
     try:
         return LogisticRegression(penalty=None, solver="lbfgs", max_iter=1000, random_state=RANDOM_STATE)
     except Exception:
         return LogisticRegression(penalty="l2", solver="lbfgs", C=1e12, max_iter=1000, random_state=RANDOM_STATE)
 
 def eval_model(name, model, X_train, y_train, X_test, y_test):
-    """אימון + החזרת שורת מדדים ל-train ול-test."""
     model.fit(X_train, y_train)
 
     # train
@@ -109,7 +97,7 @@ def eval_model(name, model, X_train, y_train, X_test, y_test):
         "test_f1": te_f1,
         "test_auc": te_auc,
     }
-    return row, yte_proba  # נחזיר גם הסתברויות test עבור גרפים
+    return row, yte_proba  # return test probabilities for ROC/PR plotting
 
 def round_cols(df):
     for c in df.columns:
