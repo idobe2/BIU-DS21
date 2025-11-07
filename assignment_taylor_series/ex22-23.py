@@ -1,39 +1,32 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import math
 
-def approx_cos_order6(x):
-    """
-    Q22: Calculates the Taylor approximation of cos(x) up to order 6.
-    Based on the series: 1 - x^2/2! + x^4/4! - x^6/6!
-    """
-    term1 = 1.0
-    term2 = -(x**2) / math.factorial(2)
-    term3 = (x**4) / math.factorial(4)
-    term4 = -(x**6) / math.factorial(6)
-    
-    return term1 + term2 + term3
 
-# --- פתרון לשאלה 23: הצגת הגרף ---
+# ----- Q22: Taylor series of cos^3(x) up to order 6 -----
+def taylor_cos3_order6(x):
+    return 1.0 - 1.5 * x**2 + (7.0 / 8.0) * x**4 - (61.0 / 240.0) * x**6
 
-# ציר X: ערכים בין -2*pi ל- 2*pi
+
+x0 = 0.5  # radians
+true_val = np.cos(x0) ** 3
+approx_val = taylor_cos3_order6(x0)
+print(f"Q22 at x={x0}:")
+print(f"  true cos^3(x)   = {true_val:.8f}")
+print(f"  Taylor (order 6) = {approx_val:.8f}")
+print(f"  abs error        = {abs(true_val-approx_val):.8e}")
+
+# ----- Q23: plot true function vs. Taylor approximation -----
 x_vals = np.linspace(-2 * np.pi, 2 * np.pi, 400)
+y_true = np.cos(x_vals) ** 3
+y_taylor = taylor_cos3_order6(x_vals)
 
-# חישוב הערך האמיתי
-true_cos = np.cos(x_vals)
-
-# חישוב הקירוב
-taylor_approx = approx_cos_order6(x_vals)
-
-# שרטוט הגרף (בדומה לגרף הדוגמה במצגת [cite: 786-798])
 plt.figure(figsize=(10, 6))
-plt.plot(x_vals, true_cos, 'b-', label='cos(x) - האמיתי', linewidth=3)
-plt.plot(x_vals, taylor_approx, 'r--', 
-         label='קירוב טיילור (סדר 6)', linewidth=2)
-plt.title("Q23: cos(x) vs. Taylor Approximation (Order 6)")
+plt.plot(x_vals, y_true, "b-", label="cos^3(x) - true", linewidth=3)
+plt.plot(x_vals, y_taylor, "r--", label="Taylor up to order 6", linewidth=2)
+plt.title("cos^3(x) vs. Taylor Approximation (Order 6)")
 plt.xlabel("x (radians)")
-plt.ylabel("Value")
+plt.ylabel("value")
 plt.legend()
 plt.grid(True)
-plt.ylim(-1.5, 1.5) # הגבלת ציר Y
+plt.ylim(-1.5, 1.5)
 plt.show()

@@ -2,34 +2,46 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.datasets import make_classification
+from sklearn.metrics import log_loss, mean_squared_error, accuracy_score
 
-# יצירת דאטה-סט סיווג
-X_q30, y_q30 = make_classification(n_samples=50, n_features=1, n_informative=1,
-                                   n_redundant=0, n_clusters_per_class=1, random_state=4)
-X_sorted = np.sort(X_q30, axis=0)
+# binary classification (1 feature)
+X, y = make_classification(n_samples=50, n_features=1, n_informative=1,
+                           n_redundant=0, n_clusters_per_class=1, random_state=4)
+X_sorted = np.sort(X, axis=0)
 
-# 1. מודל נכון: רגרסיה לוגיסטית (ממזער Cross-Entropy)
-model_log = LogisticRegression()
-model_log.fit(X_q30, y_q30)
-y_pred_log = model_log.predict_proba(X_sorted)[:, 1]
+# "correct" for classification: Logistic Regression (optimizes Cross-Entropy)
+log_clf = LogisticRegression()
+log_clf.fit(X, y)
+p_log = log_clf.predict_proba(X)[:, 1]              # probabilities in [0,1]
+yhat_log = (p_log >= 0.5).astype(int)
 
-# 2. מודל שגוי: רגרסיה ליניארית (ממזער MSE)
-model_lin = LinearRegression()
-model_lin.fit(X_q30, y_q30)
-y_pred_lin = model_lin.predict(X_sorted)
+# "wrong" for classification: Linear Regression (optimizes MSE)
+lin_clf = LinearRegression()
+lin_clf.fit(X, y)
+p_lin = lin_clf.predict(X)                           # not bounded to [0,1]
+p_lin_clip = np.clip(p_lin, 0, 1)                    # only for computing log-loss fairly
+yhat_lin = (p_lin >= 0.5).astype(int)
 
-# הצגת הגרף
+# print simple metrics to compare losses and decisions
+print("Effect of Loss Function")
+print(f"Logistic (Cross-Entropy):  log_loss={log_loss(y, p_log):.4f}, "
+      f"MSE={mean_squared_error(y, p_log):.4f}, Acc={accuracy_score(y, yhat_log):.3f}")
+print(f"Linear   (MSE on outputs): log_loss={log_loss(y, p_lin_clip):.4f} (after clipping), "
+      f"MSE={mean_squared_error(y, p_lin):.4f}, Acc={accuracy_score(y, yhat_lin):.3f}")
+print(f"Note: linear predictions min={p_lin.min():.2f}, max={p_lin.max():.2f}  (not probabilities)")
+
+# plot
 plt.figure(figsize=(10, 6))
-plt.scatter(X_q30, y_q30, color='black', zorder=20, alpha=0.7, label='Data (0/1)')
+plt.scatter(X, y, color='black', zorder=20, alpha=0.7, label='Data (0/1)')
 
-plt.plot(X_sorted, y_pred_log, 'b-', 
-         label='Logistic Regression (Loss: Cross-Entropy)', lw=3)
-plt.plot(X_sorted, y_pred_lin, 'r--', 
-         label='Linear Regression (Loss: MSE)', lw=3)
+plt.plot(X_sorted, log_clf.predict_proba(X_sorted)[:, 1], 'b-', lw=3,
+         label='Logistic Regression (Cross-Entropy)')
+plt.plot(X_sorted, lin_clf.predict(X_sorted), 'r--', lw=3,
+         label='Linear Regression (MSE)')
 
-plt.title("Q30: Effect of Loss Function on a Classification Problem")
-plt.ylabel("Prediction (Probability / Value)")
+plt.title("Effect of Loss Function on a Small Classification Problem")
 plt.xlabel("Feature")
-plt.legend()
+plt.ylabel("Prediction (Probability / Value)")
 plt.grid(True)
+plt.legend()
 plt.show()

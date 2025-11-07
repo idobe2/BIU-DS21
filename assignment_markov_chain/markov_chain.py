@@ -10,29 +10,19 @@ STATES = [
     "Router Issue",
     "Connection Issue",
     "General Issue",
-    "Issue Resolved"
+    "Issue Resolved",
 ]
 
 # --- Step 2: Define the Markov Transition Matrix ---
 TRANSITION_MATRIX = {
-    "Start": {
-      "Electricity Issue": 1.0
-    },
-    "Electricity Issue": {
-        "Router Issue": 0.7,
-        "Issue Resolved": 0.3
-    },
-    "Router Issue": {
-        "Connection Issue": 0.6,
-        "Issue Resolved": 0.4
-    },
-    "Connection Issue": {
-        "General Issue": 0.2, 
-        "Issue Resolved": 0.8
-    },
+    "Start": {"Electricity Issue": 1.0},
+    "Electricity Issue": {"Router Issue": 0.7, "Issue Resolved": 0.3},
+    "Router Issue": {"Connection Issue": 0.6, "Issue Resolved": 0.4},
+    "Connection Issue": {"General Issue": 0.2, "Issue Resolved": 0.8},
     "General Issue": {},
-    "Issue Resolved": {}
+    "Issue Resolved": {},
 }
+
 
 # --- Step 3: Simulate the Diagnostic Process ---
 def run_diagnostic(transition_matrix, start_state="Start"):
@@ -47,23 +37,13 @@ def run_diagnostic(transition_matrix, start_state="Start"):
         current_state = random.choices(states, probabilities)[0]
         path.append(current_state)
 
-    return (
-        current_state,
-        path
-    )
+    return (current_state, path)
 
-# print("--- Running Single Simulation ---")
-# final_state, diagnostic_path = run_diagnostic(TRANSITION_MATRIX)
-# print(f"Simulation ended in: {final_state}")
-# print(f"Full path was: {' -> '.join(diagnostic_path)}")
 
 # --- Step 4: Run Simulations and Analyze ---
 N = 1000
 total_path_length = 0
-end_state_counts = {
-    "Issue Resolved": 0,
-    "General Issue": 0
-}
+end_state_counts = {"Issue Resolved": 0, "General Issue": 0}
 total_state_visits = {}
 for state in TRANSITION_MATRIX.keys():
     total_state_visits[state] = 0
@@ -71,10 +51,10 @@ for state in TRANSITION_MATRIX.keys():
 for i in range(N):
     final_state, path = run_diagnostic(TRANSITION_MATRIX)
     total_path_length += len(path)
-    
+
     if final_state in end_state_counts:
         end_state_counts[final_state] += 1
-    
+
     for state in path:
         if state in total_state_visits:
             total_state_visits[state] += 1
@@ -111,27 +91,37 @@ print("\n--- Generating Markov Chain Graph ---")
 G = nx.DiGraph()
 
 for source, targets in TRANSITION_MATRIX.items():
-    G.add_node(source) 
+    G.add_node(source)
     for target, prob in targets.items():
         G.add_edge(source, target, label=f"{prob:.2f}")
 
-pos = nx.spring_layout(G, seed=42, k=0.9) 
+pos = nx.spring_layout(G, seed=42, k=0.9)
 
 plt.figure(figsize=(14, 10))
 
-nx.draw(G, pos, with_labels=True, node_color="lightblue", 
-        node_size=3000, font_size=9, font_weight="bold", arrows=True,
-        arrowstyle='->', arrowsize=20)
+nx.draw(
+    G,
+    pos,
+    with_labels=True,
+    node_color="lightblue",
+    node_size=3000,
+    font_size=9,
+    font_weight="bold",
+    arrows=True,
+    arrowstyle="->",
+    arrowsize=20,
+)
 
-edge_labels = nx.get_edge_attributes(G, 'label')
-nx.draw_networkx_edge_labels(G, pos, edge_labels=edge_labels, 
-                            font_color='red', font_size=9)
+edge_labels = nx.get_edge_attributes(G, "label")
+nx.draw_networkx_edge_labels(
+    G, pos, edge_labels=edge_labels, font_color="red", font_size=9
+)
 
 plt.title("Markov Chain: Diagnostic Process", size=16)
-plt.axis('off')
+plt.axis("off")
 plt.tight_layout()
 
-output_filename = 'diagnostic_chain.png'
+output_filename = "diagnostic_chain.png"
 plt.savefig(output_filename)
 
 print(f"Graph saved to {output_filename}")

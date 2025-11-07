@@ -1,10 +1,13 @@
+import math
+
 p = 1.0
 f = 1.0
+
 
 def e(x, n):
     global p, f
 
-    if (n == 0):
+    if n == 0:
         return 1
 
     r = e(x, n - 1)
@@ -13,8 +16,9 @@ def e(x, n):
 
     f = f * n
 
-    return (r + p / f)
+    return r + p / f
+
 
 x = 4
-n = 15
-print(e(x, n))
+n = 3
+print((math.e * x) * e(x, n) * (math.e * x))
