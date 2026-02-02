@@ -1,0 +1,77 @@
+{
+  "source": "open_meteo_api",
+  "city": {
+    "name": "Madrid",
+    "country": "ES",
+    "lat": 40.4165,
+    "lon": -3.70256
+  },
+  "date_range": {
+    "start": "2026-01-23",
+    "end": "2026-02-01",
+    "days": 10
+  },
+  "units": "metric",
+  "daily": [
+    {
+      "date": "2026-01-23",
+      "max_temp": 8.2,
+      "min_temp": 3.1,
+      "precipitation": 6.2
+    },
+    {
+      "date": "2026-01-24",
+      "max_temp": 7.4,
+      "min_temp": 0.9,
+      "precipitation": 2.4
+    },
+    {
+      "date": "2026-01-25",
+      "max_temp": 11.5,
+      "min_temp": 3.2,
+      "precipitation": 0.6
+    },
+    {
+      "date": "2026-01-26",
+      "max_temp": 11.0,
+      "min_temp": 5.2,
+      "precipitation": 1.5
+    },
+    {
+      "date": "2026-01-27",
+      "max_temp": 11.0,
+      "min_temp": 4.6,
+      "precipitation": 12.0
+    },
+    {
+      "date": "2026-01-28",
+      "max_temp": 9.4,
+      "min_temp": 0.4,
+      "precipitation": 13.5
+    },
+    {
+      "date": "2026-01-29",
+      "max_temp": 12.4,
+      "min_temp": 6.7,
+      "precipitation": 4.8
+    },
+    {
+      "date": "2026-01-30",
+      "max_temp": 9.7,
+      "min_temp": 6.2,
+      "precipitation": 4.1
+    },
+    {
+      "date": "2026-01-31",
+      "max_temp": 11.5,
+      "min_temp": 4.7,
+      "precipitation": 0.0
+    },
+    {
+      "date": "2026-02-01",
+      "max_temp": 9.3,
+      "min_temp": 5.2,
+      "precipitation": 5.1
+    }
+  ]
+}
